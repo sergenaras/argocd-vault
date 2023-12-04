@@ -9,7 +9,7 @@ global:
   enabled: true
 
   # The namespace to deploy to. Defaults to the `helm` installation namespace.
-  namespace: ""
+  namespace: "vault-system"
 
   # Image pull secret to use for registry authentication.
   # Alternatively, the value may be specified as an array of strings.
@@ -407,7 +407,7 @@ server:
   # If deployment is on OpenShift, the following block is ignored.
   # In order to expose the service, use the route section below
   ingress:
-    enabled: false
+    enabled: true
     labels: {}
       # traffic: external
     annotations: {}
@@ -420,7 +420,7 @@ server:
 
     # Optionally use ingressClassName instead of deprecated annotation.
     # See: https://kubernetes.io/docs/concepts/services-networking/ingress/#deprecated-annotation
-    ingressClassName: ""
+    ingressClassName: "nginx"
 
     # As of Kubernetes 1.19, all Ingress Paths must have a pathType configured. The default value below should be sufficient in most cases.
     # See: https://kubernetes.io/docs/concepts/services-networking/ingress/#path-types for other possible values.
@@ -430,7 +430,7 @@ server:
     # configure the ingress to point to the Vault active service.
     activeService: true
     hosts:
-      - host: chart-example.local
+      - host: vault.onecloud.local
         paths: []
     ## Extra paths to prepend to the host configuration. This is useful when working with annotation based services.
     extraPaths: []
@@ -462,7 +462,7 @@ server:
 
     labels: {}
     annotations: {}
-    host: chart-example.local
+    host: vault.onecloud.local
     # tls will be passed directly to the route's TLS config, which
     # can be used to configure other termination methods that terminate
     # TLS at the router
@@ -759,12 +759,12 @@ server:
   dataStorage:
     enabled: true
     # Size of the PVC created
-    size: 10Gi
+    size: 20Gi
     # Location where the PVC will be mounted.
     mountPath: "/vault/data"
     # Name of the storage class to use.  If null it will use the
     # configured default Storage Class.
-    storageClass: null
+    storageClass: nfs-client
     # Access Mode of the storage device being used for the PVC
     accessMode: ReadWriteOnce
     # Annotations to apply to the PVC
@@ -786,14 +786,14 @@ server:
   # /vault/audit
   # See https://developer.hashicorp.com/vault/docs/audit to know more
   auditStorage:
-    enabled: false
+    enabled: true
     # Size of the PVC created
-    size: 10Gi
+    size: 30Gi
     # Location where the PVC will be mounted.
     mountPath: "/vault/audit"
     # Name of the storage class to use.  If null it will use the
     # configured default Storage Class.
-    storageClass: null
+    storageClass: nfs-client
     # Access Mode of the storage device being used for the PVC
     accessMode: ReadWriteOnce
     # Annotations to apply to the PVC
@@ -1025,7 +1025,7 @@ ui:
   # serviceType can be used to control the type of service created. For
   # example, setting this to "LoadBalancer" will create an external load
   # balancer (for supported K8S installations) to access the UI.
-  enabled: false
+  enabled: true
   publishNotReadyAddresses: true
   # The service should only contain selectors for active Vault pod
   activeVaultPodOnly: false
